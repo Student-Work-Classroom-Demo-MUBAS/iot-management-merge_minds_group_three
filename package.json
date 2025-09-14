@@ -1,0 +1,36 @@
+{
+  "dependencies": {
+    "chart.js": "^4.5.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "joi": "^18.0.1",
+    "morgan": "^1.10.1",
+    "pg": "^8.16.3",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "name": "iot-management-merge_minds_group_three",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/src/app.js",
+    "dev": "nodemon server/src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Student-Work-Classroom-Demo-MUBAS/iot-management-merge_minds_group_three.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Student-Work-Classroom-Demo-MUBAS/iot-management-merge_minds_group_three/issues"
+  },
+  "homepage": "https://github.com/Student-Work-Classroom-Demo-MUBAS/iot-management-merge_minds_group_three#readme",
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
