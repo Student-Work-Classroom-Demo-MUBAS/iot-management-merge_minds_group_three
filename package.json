@@ -13,7 +13,7 @@
   },
   "name": "iot-management-merge_minds_group_three",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server/src/app.js",
   "scripts": {
     "start": "node server/src/app.js",
     "dev": "nodemon server/src/app.js"
