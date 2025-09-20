@@ -6,9 +6,27 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 const expressLayouts = require('express-ejs-layouts');
+
 // Route imports
 const authRoutes = require('./routes/auth.routes');
 const devicesRoutes = require('./routes/devices.routes');
 const readingsRoutes = require('./routes/readings.routes');
 const swaggerSetup = require('./config/swagger'); // Swagger setup
 const app = express();
+
+// Security, parsing, logging
+app.use(helmet());
+app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
+app.use(express.json({ limit: '200kb' }));
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));
+app.use(rateLimit({
+  windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 60_000, // default 1 min
+  max: Number(process.env.RATE_LIMIT_MAX) || 120
+}));
+
+// View engine setup
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.use(expressLayouts);
+app.set('layout', 'layouts/main');
