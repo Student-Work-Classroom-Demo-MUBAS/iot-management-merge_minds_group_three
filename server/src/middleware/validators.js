@@ -49,4 +49,24 @@ module.exports = {
       .withMessage('Project tag must be "greenhouse" if provided'),
     body('location').optional().isString().trim()
   ]),
+
+   // Reading ingestion
+ 
+  readingIngestRules: () => validate([
+    body('recorded_at').optional().isISO8601()
+      .withMessage('Recorded_at must be a valid ISO8601 date'),
+    body('data').isObject()
+      .withMessage('Data must be an object')
+  ]),
+
+  // Reading query filters
+ 
+  readingQueryRules: () => validate([
+    query('from').optional().isISO8601()
+      .withMessage('"from" must be a valid ISO8601 date'),
+    query('to').optional().isISO8601()
+      .withMessage('"to" must be a valid ISO8601 date'),
+    query('limit').optional().isInt({ min: 1, max: 5000 })
+      .withMessage('"limit" must be between 1 and 5000')
+  ])
 };
