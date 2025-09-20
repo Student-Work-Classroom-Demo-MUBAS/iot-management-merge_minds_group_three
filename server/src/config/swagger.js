@@ -24,3 +24,13 @@ const options = {
   // Look for Swagger JSDoc comments in all route files
   apis: ['**/routes/*.js']
 };
+
+// Generate the OpenAPI specification
+const specs = swaggerJsdoc(options);
+
+// Function to mount Swagger UI
+function setupSwagger(app) {
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+}
+
+module.exports = setupSwagger;
