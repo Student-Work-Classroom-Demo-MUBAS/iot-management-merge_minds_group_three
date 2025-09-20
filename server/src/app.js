@@ -37,3 +37,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/auth', authRoutes);
 app.use('/api/devices', devicesRoutes);
 app.use('/api/readings', readingsRoutes);
+
+// Swagger docs
+swaggerSetup(app);
+// Page routes
+app.get('/', (req, res) => res.render('index', { title: 'Smart Greenhouse' }));
+app.get('/devices', (req, res) => res.render('devices', { title: 'Devices' }));
+app.get('/charts', (req, res) => res.render('charts', { title: 'Charts' }));
+
+module.exports = app;
