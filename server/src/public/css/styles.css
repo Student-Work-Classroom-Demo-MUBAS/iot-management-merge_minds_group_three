@@ -166,15 +166,26 @@
 }
 
 
-/* Basic Header Styles */
+/* =========================
+   HEADER & NAVIGATION STYLES
+   ========================= */
+
+/* Header container */
 .site-header {
-  display: flex;
-  align-items: center;
-  background-color: #2e7d32; /* Green theme */
+  background-color: #2e7d32; /* Main green theme */
   color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Top row: logo + app name + hamburger */
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 10px 20px;
 }
 
+/* Logo and app name container */
 .header-left {
   display: flex;
   align-items: center;
@@ -191,6 +202,68 @@
   font-weight: 600;
   font-family: 'Inter', sans-serif;
 }
+
+/* Hamburger menu button (hidden on desktop) */
+.nav-toggle {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: none; /* Only show on small screens */
+}
+
+/* Main navigation container */
+.main-nav {
+  display: flex;
+  gap: 20px;
+  background-color: #256029; /* Slightly darker green for contrast */
+  padding: 8px 20px;
+}
+
+/* Navigation links */
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.nav-link[aria-current="page"] {
+  background-color: rgba(255, 255, 255, 0.25);
+  font-weight: 600;
+}
+
+/* =========================
+   RESPONSIVE BEHAVIOR
+   ========================= */
+
+/* On small screens, stack nav vertically and hide by default */
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: block; /* Show hamburger */
+  }
+
+  .main-nav {
+    flex-direction: column;
+    display: none; /* Hidden until toggled */
+  }
+
+  .main-nav.nav-open {
+    display: flex; /* Show when toggled */
+  }
+
+  .nav-link {
+    padding: 10px;
+  }
+}
+
 
 /* Footer Styles */
 .site-footer {

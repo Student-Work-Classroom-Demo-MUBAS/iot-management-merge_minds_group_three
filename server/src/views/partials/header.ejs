@@ -1,6 +1,27 @@
 <header class="site-header">
-  <div class="header-left">
-    <img src="/images/logo.png" alt="Smart Greenhouse Logo" class="logo" />
-    <span class="app-name">Smart Greenhouse</span>
+  <div class="header-top">
+    <div class="header-left">
+      <img src="/images/logo.png" alt="Smart Greenhouse Logo" class="logo" />
+      <span class="app-name">Smart Greenhouse</span>
+    </div>
+
+    <!-- Hamburger button for mobile -->
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      ☰
+    </button>
   </div>
+
+  <!-- Main navigation -->
+  <nav class="main-nav">
+    <a class="nav-link" href="/" aria-current="<%= page === 'dashboard' ? 'page' : false %>">Dashboard</a>
+    <a class="nav-link" href="/devices" aria-current="<%= page === 'devices' ? 'page' : false %>">Devices</a>
+    <a class="nav-link" href="/charts" aria-current="<%= page === 'charts' ? 'page' : false %>">Charts</a>
+  </nav>
 </header>
+
+<script>
+  // Toggle navigation menu on small screens
+  document.querySelector('.nav-toggle').addEventListener('click', () => {
+    document.querySelector('.main-nav').classList.toggle('nav-open');
+  });
+</script>
