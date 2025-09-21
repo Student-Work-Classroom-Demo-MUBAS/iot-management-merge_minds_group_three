@@ -164,3 +164,58 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+
+/* Basic Header Styles */
+.site-header {
+  display: flex;
+  align-items: center;
+  background-color: #2e7d32; /* Green theme */
+  color: white;
+  padding: 10px 20px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+}
+
+.app-name {
+  font-size: 1.4rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Footer Styles */
+.site-footer {
+  background-color: #1b5e20;
+  color: white;
+  padding: 15px 20px;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-logo {
+  height: 30px;
+  width: auto;
+}
+
+.footer-text {
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+
