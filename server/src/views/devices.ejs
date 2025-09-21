@@ -1,0 +1,36 @@
+<section class="devices-section">
+  <h2>Registered Devices</h2>
+  <p class="devices-subtitle">List of all IoT devices currently registered in the system.</p>
+
+  <!-- Search & Filter -->
+  <div class="device-controls">
+    <input type="text" id="device-search" placeholder=" Search by name or ID..." />
+    <select id="status-filter">
+      <option value="">All Statuses</option>
+      <option value="active">Active</option>
+      <option value="inactive">Inactive</option>
+    </select>
+  </div>
+
+  <!-- Device Table -->
+  <div class="table-container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>ID</th>
+          <th>Location</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="device-table">
+        <tr>
+          <td colspan="4" class="loading-cell">Loading devices...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Page-specific script -->
+<script src="/js/devices.js"></script>
