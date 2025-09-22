@@ -1,16 +1,16 @@
 const db = require('../config/db');
-
-async function getDeviceById(device_id) {
-  const result = await db.query('SELECT * FROM devices WHERE device_id = $1', [device_id]);
-  return result.rows[0];
-}
+const Sequelize = require('sequelize');
+const QueryTypes = Sequelize.QueryTypes;
 
 async function verifyApiKey(device_id, api_key) {
   const result = await db.query(
-    'SELECT * FROM devices WHERE device_id = $1 AND api_key = $2',
-    [device_id, api_key]
+    'SELECT * FROM devices WHERE device_id = :device_id AND api_key = :api_key',
+    {
+      replacements: { device_id, api_key },
+      type: QueryTypes.SELECT
+    }
   );
-  return result.rows[0];
+  return result[0];
 }
 
-module.exports = { getDeviceById, verifyApiKey };
+module.exports = { verifyApiKey };
