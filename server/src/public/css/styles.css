@@ -1,0 +1,295 @@
+
+/* Charts Section Styles */
+.charts-section {
+  padding: 20px;
+}
+
+.charts-subtitle {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.chart-card {
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.chart-card:hover {
+  transform: translateY(-4px);
+}
+
+.chart-card h3 {
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  color: #2e7d32;
+}
+
+
+/* Devices Section Styles */
+.devices-section {
+  padding: 20px;
+}
+
+.devices-subtitle {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.device-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.device-controls input,
+.device-controls select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #f4f4f4;
+  text-align: left;
+}
+
+.loading-cell {
+  text-align: center;
+  color: #777;
+}
+.no-data-cell {
+  text-align: center;
+  color: #777;
+}
+
+/*Index.ejs styles*/
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.card-icon {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.card h3 {
+  margin-bottom: 8px;
+  color: #2e7d32;
+}
+
+.section-subtitle {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.recent-readings {
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  min-height: 80px;
+}
+.recent-readings ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+
+/* Loading Overlay Styles in main.ejs */
+.loading-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(255, 255, 255, 0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.spinner {
+  border: 4px solid #ccc;
+  border-top: 4px solid #2e7d32;
+  border-radius: 50%;
+  width: 40px; height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+/* =========================
+   HEADER & NAVIGATION STYLES
+   ========================= */
+
+/* Header container */
+.site-header {
+  background-color: #2e7d32; /* Main green theme */
+  color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Top row: logo + app name + hamburger */
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+/* Logo and app name container */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+}
+
+.app-name {
+  font-size: 1.4rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Hamburger menu button (hidden on desktop) */
+.nav-toggle {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: none; /* Only show on small screens */
+}
+
+/* Main navigation container */
+.main-nav {
+  display: flex;
+  gap: 20px;
+  background-color: #256029; /* Slightly darker green for contrast */
+  padding: 8px 20px;
+}
+
+/* Navigation links */
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.nav-link[aria-current="page"] {
+  background-color: rgba(255, 255, 255, 0.25);
+  font-weight: 600;
+}
+
+/* =========================
+   RESPONSIVE BEHAVIOR
+   ========================= */
+
+/* On small screens, stack nav vertically and hide by default */
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: block; /* Show hamburger */
+  }
+
+  .main-nav {
+    flex-direction: column;
+    display: none; /* Hidden until toggled */
+  }
+
+  .main-nav.nav-open {
+    display: flex; /* Show when toggled */
+  }
+
+  .nav-link {
+    padding: 10px;
+  }
+}
+
+
+
+/* Footer Styles */
+.site-footer {
+  background-color: #1b5e20;
+  color: white;
+  padding: 15px 20px;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-logo {
+  height: 30px;
+  width: auto;
+}
+
+.footer-text {
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= title %> • Smart Greenhouse</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Smart Greenhouse Dashboard – Monitor and manage your IoT devices in real time." />
+  <meta name="theme-color" content="#2e7d32" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/images/favicon.png" type="image/png" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Styles -->
+  <link href="/css/styles.css" rel="stylesheet" />
+
+  <!-- Libraries -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+</head>
+<body>
+  <!-- Header -->
+  <%- include('../partials/header'); %>
+
+  <!-- Main container -->
+  <div class="container">
+    <!-- Sidebar / Navigation -->
+    <%- include('../partials/nav'); %>
+
+    <!-- Main content -->
+    <main>
+      <!-- Loading overlay -->
+      <div id="loading" class="loading-overlay" style="display:none;">
+        <div class="spinner"></div>
+        <p>Loading data...</p>
+      </div>
+
+      <%- body %>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <%- include('../partials/footer'); %>
+
+  <!-- Global scripts -->
+  <script src="/js/dashboard.js"></script>
+
+  <!-- Page-specific scripts -->
+  <% if (typeof scripts !== 'undefined') { %>
+    <% scripts.forEach(function(script) { %>
+      <script src="<%= script %>"></script>
+    <% }); %>
+  <% } %>
+</body>
+</html>

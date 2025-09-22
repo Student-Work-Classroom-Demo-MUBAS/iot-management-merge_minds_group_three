@@ -1,0 +1,35 @@
+<section class="charts-section">
+  <h2>📊 Sensor Data Charts</h2>
+  <p class="charts-subtitle">
+    Live visualisation of temperature, humidity, soil moisture, and light levels.
+  </p>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>🌡 Temperature</h3>
+      <canvas id="tempChart"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h3>💧 Humidity</h3>
+      <canvas id="humidityChart"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h3>🌿 Soil Moisture</h3>
+      <canvas id="soilChart"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h3>💡 Light Level</h3>
+      <canvas id="lightChart"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- Chart.js Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
+<!-- Page-specific script -->
+<script src="/js/charts.js"></script>
