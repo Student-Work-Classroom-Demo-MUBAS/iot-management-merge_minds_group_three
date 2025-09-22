@@ -35,8 +35,8 @@ app.set('layout', 'layouts/main');
 app.use(express.static(path.join(__dirname, 'public')));
 // API routes
 app.use('/api/auth', authRoutes);
-app.use('/api/devices', devicesRoutes);
-app.use('/api/readings', readingsRoutes);
+/* app.use('/api/devices', devicesRoutes);
+app.use('/api/readings', readingsRoutes); */
 
 // Swagger docs
 swaggerSetup(app);
