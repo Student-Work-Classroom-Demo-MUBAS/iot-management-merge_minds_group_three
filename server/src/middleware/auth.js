@@ -13,7 +13,7 @@ module.exports = (req, res, next) => {
   // Extract token if header starts with "Bearer "
   const token = header.startsWith('Bearer ') ? header.slice(7) : null;
 
-  // If no token found, reject the request
+ // If no token found, reject the request
   if (!token) {
     return res.status(401).json({ error: 'Missing token' });
   }
