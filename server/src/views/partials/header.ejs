@@ -8,11 +8,6 @@
     <!-- Right side: API Docs button -->
     <div class="header-right">
       <a class="btn btn-outline" href="/api-docs">API Docs</a>
-
-      <!-- Hamburger button for mobile -->
-      <button class="nav-toggle" aria-label="Toggle navigation">
-        ☰
-      </button>
     </div>
   </div>
 
@@ -23,10 +18,3 @@
     <a class="nav-link" href="/charts" aria-current="<%= page === 'charts' ? 'page' : false %>">Charts</a>
   </nav>
 </header>
-
-<script>
-  // Toggle navigation menu on small screens
-  document.querySelector('.nav-toggle').addEventListener('click', () => {
-    document.querySelector('.main-nav').classList.toggle('nav-open');
-  });
-</script>

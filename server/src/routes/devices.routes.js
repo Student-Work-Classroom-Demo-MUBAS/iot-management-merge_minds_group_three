@@ -20,7 +20,13 @@ const { createDevice, listDevices, getDeviceById, removeDevice } = require('../m
  *     security: [{ bearerAuth: [] }]
  */
 router.get('/', auth, async (_req, res) => {
-  res.json(await listDevices());
+  try {
+    const devices = await listDevices();
+    res.json(devices);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch devices' });
+  }
 });
 
 /**
@@ -32,13 +38,33 @@ router.get('/', auth, async (_req, res) => {
  *     security: [{ bearerAuth: [] }]
  */
 router.post('/', auth, deviceCreateRules(), async (req, res) => {
-  const { device_id, device_name, project_tag='greenhouse', location } = req.body;
-  const exists = await getDeviceById(device_id);
-  if (exists) return res.status(409).json({ error: 'device_id exists' });
-  const apiKeyPlain = crypto.randomBytes(24).toString('hex');
-  const api_key_hash = await bcrypt.hash(apiKeyPlain, Number(process.env.BCRYPT_SALT_ROUNDS) || 12);
-  const device = await createDevice({ device_id, device_name, project_tag, location, api_key_hash, created_by: req.user.sub });
-  res.status(201).json({ device, apiKey: apiKeyPlain });
+  try {
+    const { device_id, device_name, project_tag = 'greenhouse', location, status = 'active' } = req.body;
+
+    // Check if device already exists
+    const exists = await getDeviceById(device_id);
+    if (exists) return res.status(409).json({ error: 'device_id exists' });
+
+    // Generate API key
+    const apiKeyPlain = crypto.randomBytes(24).toString('hex');
+    const api_key_hash = await bcrypt.hash(apiKeyPlain, Number(process.env.BCRYPT_SALT_ROUNDS) || 12);
+
+    // Create device
+    const device = await createDevice({
+      device_id,
+      device_name,
+      project_tag,
+      location,
+      status,
+      api_key_hash,
+      created_by: req.user.sub
+    });
+
+    res.status(201).json({ device, apiKey: apiKeyPlain });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to register device' });
+  }
 });
 
 /**
@@ -50,8 +76,13 @@ router.post('/', auth, deviceCreateRules(), async (req, res) => {
  *     security: [{ bearerAuth: [] }]
  */
 router.delete('/:device_id', auth, async (req, res) => {
-  await removeDevice(req.params.device_id);
-  res.status(204).end();
+  try {
+    await removeDevice(req.params.device_id);
+    res.status(204).end();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to remove device' });
+  }
 });
 
 module.exports = router;

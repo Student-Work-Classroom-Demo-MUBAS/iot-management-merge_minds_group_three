@@ -1,7 +1,6 @@
 // Load environment variables early
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
-// Core Dependencies
 const path = require('path');
 const express = require('express');
 const helmet = require('helmet');
@@ -14,7 +13,7 @@ const expressLayouts = require('express-ejs-layouts');
 const authRoutes = require('./routes/auth.routes');
 const devicesRoutes = require('./routes/devices.routes');
 const readingsRoutes = require('./routes/readings.routes');
-const swaggerSetup = require('./config/swagger'); // Swagger setup
+const swaggerSetup = require('./config/swagger');
 
 const app = express();
 
@@ -25,7 +24,7 @@ app.use(express.json({ limit: '200kb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 app.use(rateLimit({
-  windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 60_000, // default 1 min
+  windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 60_000,
   max: Number(process.env.RATE_LIMIT_MAX) || 120
 }));
 
@@ -46,7 +45,7 @@ app.use('/api/readings', readingsRoutes);
 // Swagger docs
 swaggerSetup(app);
 
-// Page routes with `page` variable for navigation highlighting
+// Page routes
 app.get('/', (req, res) => res.render('index', { title: 'Smart Greenhouse', page: 'dashboard' }));
 app.get('/devices', (req, res) => res.render('devices', { title: 'Devices', page: 'devices' }));
 app.get('/charts', (req, res) => res.render('charts', { title: 'Charts', page: 'charts' }));
