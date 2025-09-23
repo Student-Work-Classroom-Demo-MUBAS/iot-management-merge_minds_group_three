@@ -1,6 +1,8 @@
-console.log('DB_PASSWORD type:', typeof process.env.DB_PASSWORD);
+// server/src/config/db.js
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 
-require('dotenv').config();
+console.log('DB_PASSWORD type:', typeof process.env.DB_PASSWORD, 'value:', process.env.DB_PASSWORD);
+
 const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize(
