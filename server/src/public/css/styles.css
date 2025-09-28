@@ -1,19 +1,73 @@
+/* =========================
+   GLOBAL VARIABLES & TYPOGRAPHY
+   ========================= */
 :root {
-  --brand-green: #2e7d32;
-  --brand-green-light: #43a047;
-  --text-dark: #333;
-  --text-light: #555;
-  --bg-light: #f9f9f9;
-  --bg-white: #fff;
+  /* Brand Colors - Primary Green is maintained, shadows are enhanced */
+  --brand-primary: #06421fee; /* Stronger Dark Green */
+  --brand-secondary: #1e88e5; /* Blue Accent (for contrast on tables/titles) */
+  --brand-primary-light: #50c254; /* Lighter Green for hovers */
+  --brand-accent: #ffb300; /* Subtle accent for highlights */
+
+  /* Typography Colors */
+  --text-dark: #011b08; /* Very dark for crisp text */
+  --text-light: #5a5a5a;
+  --text-inverse: #ffffff;
+
+  /* Backgrounds & Surfaces */
+  --bg-page: #f0f4f7; /* Clean, light grey-blue background */
+  --bg-surface: #ffffff;
+
+  /* Shadows for modern elevation (more pronounced lift/depth) */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.15), 0 5px 10px rgba(0, 0, 0, 0.08); /* Enhanced for depth */
+  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.25), 0 10px 15px rgba(0, 0, 0, 0.15);
+
+  /* Border Radius */
+  --border-radius-sm: 10px;
+  --border-radius-lg: 20px;
+}
+
+/* Global Reset and Typography Enhancement */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  /* Applying 'Poppins' font stack globally for an engaging, modern look */
+  font-family: "Times New Roman", Times, serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-page);
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+  color: var(--text-dark);
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.container {
+  max-width: 1280px; /* Slightly wider container */
+  margin: 0 auto;
+  padding: 0 24px;
 }
 
 /* =========================
    HEADER STYLING
    ========================= */
 .site-header {
-  background: var(--bg-white);
-  color: var(--brand-green);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  /* Clean, sticky header with a primary brand border */
+  background: var(--bg-surface);
+  color: var(--text-dark);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 0 0;
+  /* Bolder header bottom border with Primary Green */
+  border-bottom: 4px solid var(--brand-primary);
 }
 
 .header-top {
@@ -26,19 +80,20 @@
 .header-left {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
 }
 
 .logo {
-  height: 100px;
+  height: 100px; 
   width: 100px;
+  border-radius: var(--border-radius-sm);
 }
 
 .app-name {
-  font-size: 1.75rem;
-  font-weight: 700;
-  font-family: 'Inter', sans-serif;
-  color: var(--brand-green);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--brand-primary);
+  letter-spacing: 0.5px;
 }
 
 .header-right {
@@ -46,150 +101,184 @@
   align-items: center;
 }
 
+/* Updated Button Styles */
 .btn-outline {
-  border: 2px solid var(--brand-green);
-  padding: 8px 16px;
-  border-radius: 6px;
-  color: var(--brand-green);
+  border: 2px solid var(--brand-primary);
+  padding: 10px 24px;
+  border-radius: var(--border-radius-sm);
+  color: var(--brand-primary);
   text-decoration: none;
-  font-weight: 500;
-  transition: background-color 0.25s ease, color 0.25s ease;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background-color: transparent;
+  font-size: 1rem;
 }
 
 .btn-outline:hover {
-  background-color: var(--brand-green);
-  color: white;
+  background-color: var(--brand-primary);
+  color: var(--text-inverse);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
 }
 
-/* Navigation */
+/* Navigation - REDESIGNED for the creative 'Pill/Chip' effect */
 .main-nav {
   display: flex;
-  gap: 20px;
-  padding: 12px 24px;
-  background: var(--bg-light);
+  gap: 15px; /* Reduced gap to make pills feel part of a set */
+  padding: 10px 24px;
+  background-color: var(--bg-surface); /* Keep it clean */
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .nav-link {
   color: var(--text-dark);
   text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.nav-link[aria-current="page"] {
-  color: var(--brand-green);
   font-weight: 600;
+  padding: 8px 16px; /* Padding for the pill shape */
+  border-radius: 20px; /* Highly rounded corners for the pill */
+  position: relative;
+  transition: all 0.3s ease;
+  font-size: 1.5rem;
+  white-space: nowrap; /* Ensures words don't break in the pill */
 }
 
 .nav-link:hover {
-  color: var(--brand-green-light);
+  background-color: rgba(56, 139, 60, 0.1); /* Light green tint on hover */
+  color: var(--brand-primary);
+}
+
+/* Active Nav Link  */
+.nav-link[aria-current="page"] {
+  color: var(--text-inverse); /* White text on green background */
+  background-color: var(--brand-primary);
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+}
+
+.nav-link[aria-current="page"]:hover {
+    /* Maintain the active look on hover */
+    background-color: var(--brand-primary);
+    color: var(--text-inverse);
+    transform: translateY(-1px);
 }
 
 /* =========================
    FOOTER STYLING
    ========================= */
 .site-footer {
-  background: var(--bg-white);
-  color: var(--brand-green);
-  padding: 18px 20px;
+  background: var(--bg-surface);
+  color: var(--text-light);
+  padding: 30px 24px;
   text-align: center;
-  margin-top: 40px;
-  box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+  margin-top: 60px;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+  border-top: 1px solid #05422b;
 }
 
 .footer-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
 }
 
 .footer-logo {
   height: 100px;
   width: 100px;
+  opacity: 0.8;
 }
 
 .footer-text {
-  font-size: 0.9rem;
-  opacity: 0.85;
+  font-size: 1.5rem;
+  opacity: 0.9;
+  color: var(--brand-primary);
 }
 
 /* =========================
-   DASHBOARD CARD STYLES
+   DASHBOARD CARD STYLES (Creative Enhancements)
    ========================= */
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
+  gap: 30px;
+  margin-bottom: 50px;
+  padding-top: 40px;
 }
 
 .card {
-  background: var(--bg-white);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  background: var(--bg-surface);
+  border-radius: var(--border-radius-lg);
+  padding: 35px 25px; 
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   text-align: center;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease, border-color 0.4s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: 1px solid #e0e0e0;
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  transform: translateY(-15px); 
+  box-shadow: 0 20px 40px rgba(56, 142, 60, 0.3), 0 0 0 4px var(--brand-primary-light);
+  border-color: var(--brand-primary); /* Primary border color on hover */
 }
 
+/* Icon background  */
 .card-icon {
-  margin-bottom: 12px;
+  margin-bottom: 20px;
+  padding: 18px; 
+  border-radius: 50%;
+  display: inline-flex;
+  box-shadow: 0 4px 10px rgba(56, 142, 60, 0.3); /* Green shadow */
 }
 
 .card-icon img {
-  width: 64px;
-  height: 64px;
-  object-fit: contain;
+  width: 100px;
+  height: 100px;
 }
 
 .card h3 {
   margin-bottom: 8px;
-  color: var(--brand-green);
-  font-size: 1.25rem;
-  font-weight: 600;
+  color: var(--brand-primary);
+  font-size: 1.6rem;
+  font-weight: 700;
 }
 
 .card p {
-  font-size: 0.95rem;
+  /* Increased text size to 1.2rem */
+  font-size: 1.2rem;
   color: var(--text-light);
-  line-height: 1.4;
+  line-height: 1.6;
 }
 
 /* =========================
-   DEVICES SECTION CONTAINER
+   DEVICES SECTION CONTAINER 
    ========================= */
-.devices-section {
-  padding: 24px;
-  background: #f9f9f9;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+.devices-section, .charts-section {
+  padding: 45px; 
+  background: var(--bg-surface);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm), 0 5px 15px rgba(0, 0, 0, 0.04);
+  margin-top: 40px;
+  border-left: none; 
 }
 
 /* =========================
    TITLE WITH ICON
    ========================= */
 .devices-title {
-  font-size: 1.65rem;
-  font-weight: 700;
-  color: #2e7d32;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--brand-primary);
   margin-bottom: 8px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
 }
 
 .section-icon {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
 }
 
@@ -197,9 +286,9 @@
    SUBTITLE
    ========================= */
 .devices-subtitle {
-  font-size: 1rem;
-  color: #555;
-  margin-bottom: 20px;
+  font-size: 1.15rem;
+  color: var(--text-light);
+  margin-bottom: 30px;
 }
 
 /* =========================
@@ -208,42 +297,52 @@
 .device-form {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 20px;
+  margin-bottom: 40px;
+  padding: 25px;
+  background-color: var(--bg-page);
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
 }
 
 .device-form input,
 .device-form select {
   flex: 1;
-  min-width: 180px;
-  padding: 10px;
+  min-width: 220px;
+  padding: 14px;
   border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  border-radius: var(--border-radius-sm);
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: var(--bg-surface);
 }
 
 .device-form input:focus,
 .device-form select:focus {
-  border-color: #43a047;
-  box-shadow: 0 0 6px rgba(67, 160, 71, 0.3);
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 10px rgba(56, 142, 60, 0.2);
   outline: none;
 }
 
 .device-form button {
-  background-color: #43a047;
-  color: white;
-  padding: 10px 18px;
+  /* Using primary green for action buttons */
+  background-color: var(--brand-primary);
+  color: var(--text-inverse);
+  padding: 14px 28px;
   border: none;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  font-weight: 600;
+  border-radius: var(--border-radius-sm);
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.3s ease;
+  flex-grow: 0;
+  box-shadow: var(--shadow-sm);
 }
 
 .device-form button:hover {
-  background-color: #2e7d32;
+  background-color: var(--brand-primary-light);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 
 /* =========================
@@ -252,25 +351,26 @@
 .device-controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 20px;
+  margin-bottom: 30px;
 }
 
 .device-controls input,
 .device-controls select {
   flex: 1;
-  min-width: 200px;
-  padding: 10px;
+  min-width: 250px;
+  padding: 14px;
   border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  border-radius: var(--border-radius-sm);
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: var(--bg-surface);
 }
 
 .device-controls input:focus,
 .device-controls select:focus {
-  border-color: #43a047;
-  box-shadow: 0 0 6px rgba(67, 160, 71, 0.3);
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 10px rgba(56, 142, 60, 0.2);
   outline: none;
 }
 
@@ -279,93 +379,77 @@
    ========================= */
 .table-container {
   overflow-x: auto;
+  border-radius: 10px;
+  box-shadow: var(--shadow-md);
 }
 
 /* =========================
-   TABLE STYLING
+   TABLE STYLING (Clean and professional)
    ========================= */
 .table {
   width: 100%;
-  border-collapse: collapse;
-  background: #fff;
-  border-radius: 8px;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--bg-surface);
+  border-radius: 10px;
   overflow: hidden;
 }
 
 .table th, .table td {
-  padding: 12px;
+  padding: 16px 20px;
   text-align: left;
+  border-bottom: 1px solid #eee;
 }
 
 .table th {
-  background-color: #e8f5e9;
-  color: #2e7d32;
-  font-weight: 600;
+  background-color: var(--brand-primary); /* Primary Green for header */
+  color: var(--text-inverse);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.95rem;
 }
 
+/* Rounding for table headers */
+.table th:first-child { border-top-left-radius: 10px; }
+.table th:last-child { border-top-right-radius: 10px; }
+
 .table tr:nth-child(even) {
-  background-color: #fafafa; /* subtle striping */
+  background-color: var(--bg-page);
 }
 
 .table tr:hover {
-  background-color: rgba(67, 160, 71, 0.08);
+  background-color: rgba(56, 142, 60, 0.08); /* Hover using primary brand color */
+  cursor: pointer;
 }
 
 .loading-cell {
   text-align: center;
-  color: #777;
-  padding: 20px;
-}
-
-/* =========================
-   RESPONSIVE TWEAKS
-   ========================= */
-@media (max-width: 768px) {
-  .devices-title {
-    font-size: 1.4rem;
-  }
-  .device-form,
-  .device-controls {
-    flex-direction: column;
-  }
-  .table th, .table td {
-    padding: 10px;
-    font-size: 0.9rem;
-  }
+  color: var(--text-light);
+  padding: 30px;
+  font-style: italic;
+  font-size: 1.1rem;
 }
 
 /* =========================
    CHARTS SECTION CONTAINER
    ========================= */
-.charts-section {
-  padding: 24px;
-  background: #f9f9f9;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
 
 /* Title with icon */
 .charts-title {
-  font-size: 1.65rem;
-  font-weight: 700;
-  color: #2e7d32;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--brand-primary);
   margin-bottom: 8px;
   display: flex;
   align-items: center;
-  gap: 10px;
-}
-
-.section-icon {
-  width: 30px;
-  height: 30px;
-  object-fit: contain;
+  gap: 15px;
 }
 
 /* Subtitle */
 .charts-subtitle {
-  font-size: 1rem;
-  color: #555;
-  margin-bottom: 20px;
+  font-size: 1.3rem;
+  color: var(--text-light);
+  margin-bottom: 30px;
 }
 
 /* =========================
@@ -373,60 +457,127 @@
    ========================= */
 .charts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
 }
 
 /* Chart card styling */
 .chart-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  background: var(--bg-surface);
+  border-radius: var(--border-radius-lg);
+  padding: 30px;
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  gap: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .chart-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  box-shadow: var(--shadow-md);
 }
 
 /* Chart header with icon */
 .chart-header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
 .chart-icon {
-  width: 26px;
-  height: 26px;
+  width: 70px;
+  height: 70px;
   object-fit: contain;
 }
 
 .chart-card h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #2e7d32;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--brand-primary);
 }
 
 /* =========================
-   RESPONSIVE TWEAKS
+   RESPONSIVE TWEAKS (Improved Mobile optimization)
    ========================= */
-@media (max-width: 768px) {
-  .charts-title {
-    font-size: 1.4rem;
+@media (max-width: 900px) {
+  .container {
+    padding: 0 15px;
   }
-  .chart-card h3 {
-    font-size: 1rem;
+  .cards {
+    gap: 20px;
   }
-}
-@media (max-width: 480px) {
-  .chart-card {
-    padding: 12px;
+  .devices-section, .charts-section {
+    padding: 30px;
   }
 }
 
+@media (max-width: 768px) {
+  /* Header/Navigation Mobile Adjustment */
+  .header-top {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-bottom: 15px;
+  }
+  .header-left {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+  .header-right {
+    width: 100%;
+    justify-content: center;
+  }
+  .btn-outline {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+  /* Sticky bottom navigation for mobile */
+  .main-nav {
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    justify-content: space-around;
+    gap: 5px;
+    padding: 8px 5px;
+    border-top: 1px solid #ddd;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    background-color: var(--bg-surface);
+  }
+  .nav-link {
+    padding: 8px 12px; /* Adjusted padding for mobile pill */
+    font-size: 0.8rem;
+    border-radius: 15px;
+  }
+  .devices-title, .charts-title {
+    font-size: 1.8rem;
+  }
+  .device-form,
+  .device-controls {
+    flex-direction: column;
+    padding: 15px;
+    gap: 12px;
+  }
+  .device-form input,
+  .device-form select,
+  .device-form button,
+  .device-controls input,
+  .device-controls select {
+    min-width: 100%;
+  }
+  .table th, .table td {
+    padding: 12px 15px;
+    font-size: 0.85rem;
+  }
+  .card p {
+    font-size: 1.1rem; /* Adjusted for mobile readability */
+  }
+  .card-icon img {
+    width: 55px; /* Slightly reduced for mobile screen */
+    height: 55px;
+  }
+  .card-icon {
+    padding: 15px;
+  }
+}
