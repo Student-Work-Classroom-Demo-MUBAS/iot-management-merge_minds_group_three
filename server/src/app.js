@@ -1,17 +1,7 @@
-// Load environment variables
+// Load environment variables early
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
+
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
-
-// Optional: log DB config for debugging
-console.log('DB config:', {
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT
-});
-
-// Core Dependencies
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -23,7 +13,7 @@ const expressLayouts = require('express-ejs-layouts');
 const authRoutes = require('./routes/auth.routes');
 const devicesRoutes = require('./routes/devices.routes');
 const readingsRoutes = require('./routes/readings.routes');
-const swaggerSetup = require('./config/swagger'); // Swagger setup
+const swaggerSetup = require('./config/swagger');
 
 const app = express();
 
@@ -34,7 +24,7 @@ app.use(express.json({ limit: '200kb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 app.use(rateLimit({
-  windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 60_000, // default 1 min
+  windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 60_000,
   max: Number(process.env.RATE_LIMIT_MAX) || 120
 }));
 
@@ -56,14 +46,8 @@ app.use('/api/readings', readingsRoutes);
 swaggerSetup(app);
 
 // Page routes
-app.get('/', (req, res) => res.render('index', { title: 'Smart Greenhouse' }));
-app.get('/devices', (req, res) => res.render('devices', { title: 'Devices' }));
-app.get('/charts', (req, res) => res.render('charts', { title: 'Charts' }));
-
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.get('/', (req, res) => res.render('index', { title: 'Smart Greenhouse', page: 'dashboard' }));
+app.get('/devices', (req, res) => res.render('devices', { title: 'Devices', page: 'devices' }));
+app.get('/charts', (req, res) => res.render('charts', { title: 'Charts', page: 'charts' }));
 
 module.exports = app;

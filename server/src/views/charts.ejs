@@ -1,27 +1,43 @@
 <section class="charts-section">
-  <h2>📊 Sensor Data Charts</h2>
+  <!-- Title with icon -->
+  <h2 class="charts-title">
+    <img src="/images/charts-icon.png" alt="Charts Icon" class="section-icon">
+    Sensor Data Charts
+  </h2>
   <p class="charts-subtitle">
     Live visualisation of temperature, humidity, soil moisture, and light levels.
   </p>
 
   <div class="charts-grid">
     <div class="chart-card">
-      <h3>🌡 Temperature</h3>
+      <div class="chart-header">
+        <img src="/images/temp-icon.png" alt="Temperature Icon" class="chart-icon">
+        <h3>Temperature</h3>
+      </div>
       <canvas id="tempChart"></canvas>
     </div>
 
     <div class="chart-card">
-      <h3>💧 Humidity</h3>
+      <div class="chart-header">
+        <img src="/images/humidity-icon.png" alt="Humidity Icon" class="chart-icon">
+        <h3>Humidity</h3>
+      </div>
       <canvas id="humidityChart"></canvas>
     </div>
 
     <div class="chart-card">
-      <h3>🌿 Soil Moisture</h3>
+      <div class="chart-header">
+        <img src="/images/soil-icon.png" alt="Soil Moisture Icon" class="chart-icon">
+        <h3>Soil Moisture</h3>
+      </div>
       <canvas id="soilChart"></canvas>
     </div>
 
     <div class="chart-card">
-      <h3>💡 Light Level</h3>
+      <div class="chart-header">
+        <img src="/images/light-icon.png" alt="Light Level Icon" class="chart-icon">
+        <h3>Light Level</h3>
+      </div>
       <canvas id="lightChart"></canvas>
     </div>
   </div>

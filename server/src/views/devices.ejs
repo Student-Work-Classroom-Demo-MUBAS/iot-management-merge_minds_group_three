@@ -1,10 +1,26 @@
 <section class="devices-section">
-  <h2>Registered Devices</h2>
+  <!-- Title with icon -->
+  <h2 class="devices-title">
+    <img src="/images/devices-icon.png" alt="Devices Icon" class="section-icon">
+    Registered Devices
+  </h2>
   <p class="devices-subtitle">List of all IoT devices currently registered in the system.</p>
+
+  <!-- Register Device Form -->
+  <form id="add-device-form" class="device-form">
+    <input type="text" name="device_name" placeholder="Device Name" required>
+    <input type="text" name="device_id" placeholder="Device ID" required>
+    <input type="text" name="location" placeholder="Location" required>
+    <select name="status" required>
+      <option value="active">Active</option>
+      <option value="inactive">Inactive</option>
+    </select>
+    <button type="submit">Register Device</button>
+  </form>
 
   <!-- Search & Filter -->
   <div class="device-controls">
-    <input type="text" id="device-search" placeholder=" Search by name or ID..." />
+    <input type="text" id="device-search" placeholder="Search by name or ID..." />
     <select id="status-filter">
       <option value="">All Statuses</option>
       <option value="active">Active</option>
