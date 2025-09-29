@@ -1,10 +1,8 @@
-<<<<<<< HEAD
-// require('dotenv').config(); // ✅ Load environment variables
-// require('dotenv').config({ path: '../.env' });
+// Load environment variables
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
-
+// Optional: log DB config for debugging
 console.log('DB config:', {
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -13,26 +11,7 @@ console.log('DB config:', {
   port: process.env.DB_PORT
 });
 
-
-const express = require('express');
-const app = express();
-const readingsRoutes = require('./routes/readings.routes');
-
-app.use(express.json());
-app.use('/readings', readingsRoutes);
-
-// Optional: root route
-app.get('/', (req, res) => {
-  res.send('IoT Management API is running');
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-=======
-//Core Dependencies 
-const path = require('path');
+// Core Dependencies
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -45,6 +24,7 @@ const authRoutes = require('./routes/auth.routes');
 const devicesRoutes = require('./routes/devices.routes');
 const readingsRoutes = require('./routes/readings.routes');
 const swaggerSetup = require('./config/swagger'); // Swagger setup
+
 const app = express();
 
 // Security, parsing, logging
@@ -66,17 +46,24 @@ app.set('layout', 'layouts/main');
 
 // Static assets
 app.use(express.static(path.join(__dirname, 'public')));
+
 // API routes
 app.use('/api/auth', authRoutes);
-/* app.use('/api/devices', devicesRoutes);
-app.use('/api/readings', readingsRoutes); */
+app.use('/api/devices', devicesRoutes);
+app.use('/api/readings', readingsRoutes);
 
 // Swagger docs
 swaggerSetup(app);
+
 // Page routes
 app.get('/', (req, res) => res.render('index', { title: 'Smart Greenhouse' }));
 app.get('/devices', (req, res) => res.render('devices', { title: 'Devices' }));
 app.get('/charts', (req, res) => res.render('charts', { title: 'Charts' }));
 
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
 module.exports = app;
->>>>>>> debra-auth-security-swagger
