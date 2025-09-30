@@ -2,7 +2,10 @@ const db = require('../config/db');
 const Sequelize = require('sequelize');
 const QueryTypes = Sequelize.QueryTypes;
 
+<<<<<<< HEAD
 // Verify API key for a device
+=======
+>>>>>>> louiser-backend-ingestion-setup
 async function verifyApiKey(device_id, api_key) {
   const result = await db.query(
     'SELECT * FROM devices WHERE device_id = :device_id AND api_key = :api_key',
@@ -14,6 +17,7 @@ async function verifyApiKey(device_id, api_key) {
   return result[0];
 }
 
+<<<<<<< HEAD
 // List all devices
 async function listDevices() {
   return await db.query(
@@ -64,3 +68,6 @@ module.exports = {
   createDevice,
   removeDevice
 };
+=======
+module.exports = { verifyApiKey };
+>>>>>>> louiser-backend-ingestion-setup
