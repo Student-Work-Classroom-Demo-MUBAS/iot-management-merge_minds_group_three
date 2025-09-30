@@ -39,6 +39,7 @@
   "homepage": "https://github.com/Student-Work-Classroom-Demo-MUBAS/iot-management-merge_minds_group_three#readme",
   "description": "",
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "sequelize-cli": "^6.6.3"
   }
 }

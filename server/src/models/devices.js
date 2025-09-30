@@ -1,66 +1,32 @@
-const db = require('../config/db');
-const Sequelize = require('sequelize');
-const QueryTypes = Sequelize.QueryTypes;
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/db');
+const { User } = require('./users');   
 
-// Verify API key for a device
-async function verifyApiKey(device_id, api_key) {
-  const result = await db.query(
-    'SELECT * FROM devices WHERE device_id = :device_id AND api_key = :api_key',
-    {
-      replacements: { device_id, api_key },
-      type: QueryTypes.SELECT
-    }
-  );
-  return result[0];
+const Device = sequelize.define('Device', {
+  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+
+  device_id: { type: DataTypes.STRING(50), allowNull: false, unique: true },
+
+  device_name: { type: DataTypes.STRING(100), allowNull: false },
+
+  project_tag: { type: DataTypes.STRING(50) },
+
+  location: { type: DataTypes.STRING(100) },
+
+  status: { type: DataTypes.STRING(20), defaultValue: 'offline' },
+
+  api_key: { type: DataTypes.STRING, allowNull: false }
+}, {
+  tableName: 'devices',
+  timestamps: true,
+  createdAt: 'created_at',
+  updatedAt: false
+});
+
+// Associations
+if (User && User.hasMany) {
+  User.hasMany(Device, { foreignKey: 'user_id' });
+  Device.belongsTo(User, { foreignKey: 'user_id' });
 }
 
-// List all devices
-async function listDevices() {
-  return await db.query(
-    'SELECT device_id, device_name, project_tag, location, status, created_by, created_at FROM devices ORDER BY device_name ASC',
-    { type: QueryTypes.SELECT }
-  );
-}
-
-// Get a single device by ID
-async function getDeviceById(device_id) {
-  const result = await db.query(
-    'SELECT * FROM devices WHERE device_id = :device_id',
-    {
-      replacements: { device_id },
-      type: QueryTypes.SELECT
-    }
-  );
-  return result[0];
-}
-
-// Create a new device
-async function createDevice({ device_id, device_name, project_tag, location, status, api_key_hash, created_by }) {
-  return await db.query(
-    `INSERT INTO devices (device_id, device_name, project_tag, location, status, api_key, created_by, created_at)
-     VALUES (:device_id, :device_name, :project_tag, :location, :status, :api_key_hash, :created_by, NOW())`,
-    {
-      replacements: { device_id, device_name, project_tag, location, status, api_key_hash, created_by },
-      type: QueryTypes.INSERT
-    }
-  );
-}
-
-// Remove a device
-async function removeDevice(device_id) {
-  return await db.query(
-    'DELETE FROM devices WHERE device_id = :device_id',
-    {
-      replacements: { device_id },
-      type: QueryTypes.DELETE
-    }
-  );
-}
-
-module.exports = {
-  verifyApiKey,
-  listDevices,
-  getDeviceById,
-  createDevice,
-  removeDevice
-};
+module.exports = Device;

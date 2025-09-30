@@ -1,105 +1,88 @@
-const { pool } = require('../config/db');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/db');
 
-/**
- * Create a new user
- */
+// Define the User model
+const User = sequelize.define('User', {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+
+  name: {
+    type: DataTypes.STRING(100),
+    allowNull: false
+  },
+
+  email: {
+    type: DataTypes.STRING(150),
+    allowNull: false,
+    unique: true,
+    validate: { isEmail: true }
+  },
+
+  password_hash: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+
+  role: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'user'
+  },
+
+  active: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
+  }
+}, {
+  tableName: 'users',
+  timestamps: true,
+  createdAt: 'created_at',
+  updatedAt: false
+});
+
+// -------------------- Helper functions --------------------
+
+// Create a new user
 async function createUser({ name, email, password_hash, role = 'user' }) {
-  const query = `
-    INSERT INTO users (name, email, password_hash, role)
-    VALUES ($1, $2, $3, $4)
-    RETURNING id, name, email, role, created_at
-  `;
-  try {
-    const { rows } = await pool.query(query, [name, email, password_hash, role]);
-    return rows[0];
-  } catch (err) {
-    console.error('Error creating user:', err);
-    throw err;
-  }
+  return await User.create({ name, email, password_hash, role });
 }
 
-/**
- * Find a user by email
- */
+// Find a user by email
 async function findByEmail(email) {
-  const query = `SELECT * FROM users WHERE email = $1`;
-  try {
-    const { rows } = await pool.query(query, [email]);
-    return rows[0] || null;
-  } catch (err) {
-    console.error('Error finding user by email:', err);
-    throw err;
-  }
+  return await User.findOne({ where: { email } });
 }
 
-/**
- * Find a user by ID
- */
+// Find a user by ID
 async function findById(id) {
-  const query = `SELECT * FROM users WHERE id = $1`;
-  try {
-    const { rows } = await pool.query(query, [id]);
-    return rows[0] || null;
-  } catch (err) {
-    console.error('Error finding user by ID:', err);
-    throw err;
-  }
+  return await User.findByPk(id);
 }
 
-/**
- * List all users (excluding password hashes)
- */
+// List all users (excluding password hashes)
 async function listUsers() {
-  const query = `SELECT id, name, email, role, created_at FROM users ORDER BY created_at DESC`;
-  try {
-    const { rows } = await pool.query(query);
-    return rows;
-  } catch (err) {
-    console.error('Error listing users:', err);
-    throw err;
-  }
+  return await User.findAll({
+    attributes: ['id', 'name', 'email', 'role', 'active', 'created_at'],
+    order: [['created_at', 'DESC']]
+  });
 }
 
-/**
- * Update user details
- */
+// Update user details
 async function updateUser(id, updates) {
-  const fields = [];
-  const values = [];
-  let i = 1;
-
-  for (const [key, value] of Object.entries(updates)) {
-    fields.push(`${key} = $${i}`);
-    values.push(value);
-    i++;
-  }
-
-  const query = `UPDATE users SET ${fields.join(', ')} WHERE id = $${i} RETURNING id, name, email, role, created_at`;
-  values.push(id);
-
-  try {
-    const { rows } = await pool.query(query, values);
-    return rows[0];
-  } catch (err) {
-    console.error('Error updating user:', err);
-    throw err;
-  }
+  const user = await User.findByPk(id);
+  if (!user) return null;
+  return await user.update(updates);
 }
 
-/**
- * Deactivate user (soft delete)
- */
+// Deactivate user (soft delete)
 async function deactivateUser(id) {
-  const query = `UPDATE users SET active = false WHERE id = $1`;
-  try {
-    await pool.query(query, [id]);
-  } catch (err) {
-    console.error('Error deactivating user:', err);
-    throw err;
-  }
+  const user = await User.findByPk(id);
+  if (!user) return null;
+  return await user.update({ active: false });
 }
 
 module.exports = {
+  User,            // export the Sequelize model itself
   createUser,
   findByEmail,
   findById,
