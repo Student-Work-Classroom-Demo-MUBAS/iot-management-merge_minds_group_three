@@ -1,5 +1,22 @@
+<<<<<<< HEAD
 // Load environment variables early
 require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
+=======
+// require('dotenv').config(); // ✅ Load environment variables
+// require('dotenv').config({ path: '../.env' });
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+
+
+console.log('DB config:', {
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT
+});
+
+>>>>>>> louiser-backend-ingestion-setup
 
 const path = require('path');
 const express = require('express');
@@ -20,7 +37,12 @@ const requireAuth = require('./middleware/auth'); // ✅ JWT middleware
 // Import Device model directly
 const Device = require('./models/devices');
 
+<<<<<<< HEAD
 const app = express();
+=======
+app.use(express.json());
+app.use('/readings', readingsRoutes);
+>>>>>>> louiser-backend-ingestion-setup
 
 // -------------------- Security, parsing, logging --------------------
 app.use(helmet());
@@ -97,3 +119,9 @@ app.get('/charts', requireAuth, (req, res) =>
 );
 
 module.exports = app;
+=======
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+>>>>>>> louiser-backend-ingestion-setup

@@ -1,8 +1,14 @@
+<<<<<<< HEAD
 // server/src/config/db.js
 require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 
 console.log('DB_PASSWORD type:', typeof process.env.DB_PASSWORD, 'value:', process.env.DB_PASSWORD);
 
+=======
+console.log('DB_PASSWORD type:', typeof process.env.DB_PASSWORD);
+
+require('dotenv').config();
+>>>>>>> louiser-backend-ingestion-setup
 const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize(
