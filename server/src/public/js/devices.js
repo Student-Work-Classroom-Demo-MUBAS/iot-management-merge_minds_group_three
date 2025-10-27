@@ -5,9 +5,7 @@ async function loadDevices() {
 
   try {
     const res = await fetch('/api/devices', {
-      headers: {
-        'Authorization': 'Bearer ' + localStorage.getItem('token')
-      }
+      credentials: 'include' // ✅ send cookies (JWT token)
     });
 
     if (!res.ok) throw new Error('Failed to fetch devices');
@@ -60,10 +58,8 @@ document.getElementById('add-device-form').addEventListener('submit', async (e) 
   try {
     const res = await fetch('/api/devices', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + localStorage.getItem('token')
-      },
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include', // ✅ send cookies
       body: JSON.stringify(body)
     });
 

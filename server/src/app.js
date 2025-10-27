@@ -8,37 +8,35 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 const expressLayouts = require('express-ejs-layouts');
+const cookieParser = require('cookie-parser');
 
 // Route imports
 const authRoutes = require('./routes/auth.routes');
 const devicesRoutes = require('./routes/devices.routes');
 const readingsRoutes = require('./routes/readings.routes');
 const swaggerSetup = require('./config/swagger');
+const requireAuth = require('./middleware/auth'); // ✅ JWT middleware
+
+// Import Device model directly
+const Device = require('./models/devices');
 
 const app = express();
 
 // -------------------- Security, parsing, logging --------------------
 app.use(helmet());
-
-// Allow CORS from your frontend (default: localhost:3000)
 app.use(cors({
   origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key']
 }));
-
-// Body parsing
 app.use(express.json({ limit: '200kb' }));
 app.use(express.urlencoded({ extended: true }));
-
-// Logging
 app.use(morgan('dev'));
-
-// Rate limiting
 app.use(rateLimit({
-  windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 60_000, // 1 minute
-  max: Number(process.env.RATE_LIMIT_MAX) || 120                // 120 requests per minute
+  windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 60_000,
+  max: Number(process.env.RATE_LIMIT_MAX) || 120
 }));
+app.use(cookieParser());
 
 // -------------------- View engine setup --------------------
 app.set('view engine', 'ejs');
@@ -58,16 +56,44 @@ app.use('/api/readings', readingsRoutes);
 swaggerSetup(app);
 
 // -------------------- Page routes --------------------
-app.get('/', (req, res) =>
-  res.render('index', { title: 'Smart Greenhouse', page: 'dashboard' })
+// Public pages
+app.get('/login', (req, res) =>
+  res.render('login', { title: 'Login', page: 'login', error: null })
 );
 
-app.get('/devices', (req, res) =>
-  res.render('devices', { title: 'Devices', page: 'devices' })
+app.get('/signup', (req, res) =>
+  res.render('signup', { title: 'Sign Up', page: 'signup', error: null })
 );
 
-app.get('/charts', (req, res) =>
-  res.render('charts', { title: 'Charts', page: 'charts' })
+// Protected pages (require JWT in cookie or header)
+app.get('/', requireAuth, (req, res) =>
+  res.render('index', { title: 'Smart Greenhouse', page: 'dashboard', user: req.user })
+);
+
+// Devices page now queries DB
+app.get('/devices', requireAuth, async (req, res) => {
+  try {
+    const devices = await Device.findAll(); // Sequelize query
+    res.render('devices', {
+      title: 'Devices',
+      page: 'devices',
+      user: req.user,
+      devices
+    });
+  } catch (err) {
+    console.error('❌ Failed to load devices:', err);
+    res.render('devices', {
+      title: 'Devices',
+      page: 'devices',
+      user: req.user,
+      devices: [],
+      error: 'Failed to load devices'
+    });
+  }
+});
+
+app.get('/charts', requireAuth, (req, res) =>
+  res.render('charts', { title: 'Charts', page: 'charts', user: req.user })
 );
 
 module.exports = app;

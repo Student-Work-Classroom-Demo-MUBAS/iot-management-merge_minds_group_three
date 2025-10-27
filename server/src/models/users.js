@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
+const bcrypt = require('bcrypt');
 
 // Define the User model
 const User = sequelize.define('User', {
@@ -44,8 +45,9 @@ const User = sequelize.define('User', {
 
 // -------------------- Helper functions --------------------
 
-// Create a new user
-async function createUser({ name, email, password_hash, role = 'user' }) {
+// Create a new user (hash password automatically)
+async function createUser({ name, email, password, role = 'user' }) {
+  const password_hash = await bcrypt.hash(password, 12);
   return await User.create({ name, email, password_hash, role });
 }
 
@@ -56,7 +58,9 @@ async function findByEmail(email) {
 
 // Find a user by ID
 async function findById(id) {
-  return await User.findByPk(id);
+  return await User.findByPk(id, {
+    attributes: ['id', 'name', 'email', 'role', 'active', 'created_at']
+  });
 }
 
 // List all users (excluding password hashes)
@@ -82,7 +86,7 @@ async function deactivateUser(id) {
 }
 
 module.exports = {
-  User,            // export the Sequelize model itself
+  User,
   createUser,
   findByEmail,
   findById,

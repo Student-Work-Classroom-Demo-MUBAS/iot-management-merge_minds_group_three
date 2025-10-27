@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
-const { User } = require('./users');   
+const User = require('./users');   // import directly, not destructured
 
 const Device = sequelize.define('Device', {
   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
@@ -23,7 +23,7 @@ const Device = sequelize.define('Device', {
   updatedAt: false
 });
 
-// Associations
+// -------------------- Associations --------------------
 if (User && User.hasMany) {
   User.hasMany(Device, { foreignKey: 'user_id' });
   Device.belongsTo(User, { foreignKey: 'user_id' });

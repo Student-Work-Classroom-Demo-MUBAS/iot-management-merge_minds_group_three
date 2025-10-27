@@ -1,0 +1,17 @@
+<main class="auth-box">
+  <h2 class="auth-title">Login</h2>
+
+  <% if (error) { %>
+    <p class="auth-error"><%= error %></p>
+  <% } %>
+
+  <form action="/api/auth/login" method="POST" class="auth-form">
+    <input type="email" name="email" placeholder="Email" required class="auth-input" />
+    <input type="password" name="password" placeholder="Password" required class="auth-input" />
+    <button type="submit" class="auth-button">Login</button>
+  </form>
+
+  <p class="auth-link">
+    Don’t have an account? <a href="/signup">Sign Up</a>
+  </p>
+</main>

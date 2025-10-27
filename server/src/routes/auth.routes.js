@@ -12,6 +12,7 @@ const jwt = require('jsonwebtoken');
 const { registerRules, loginRules } = require('../middleware/validators');
 const { createUser, findByEmail } = require('../models/users');
 
+// -------------------- SIGNUP --------------------
 /**
  * @swagger
  * /api/auth/register:
@@ -43,17 +44,6 @@ const { createUser, findByEmail } = require('../models/users');
  *     responses:
  *       201:
  *         description: User registered successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 id:
- *                   type: integer
- *                 name:
- *                   type: string
- *                 email:
- *                   type: string
  *       409:
  *         description: Email already registered
  *       500:
@@ -68,22 +58,27 @@ router.post('/register', registerRules(), async (req, res) => {
       return res.status(409).json({ error: 'Email already registered' });
     }
 
-    const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS) || 12;
-    const password_hash = await bcrypt.hash(password, saltRounds);
+    // ✅ Let model handle hashing
+    const user = await createUser({ name, email, password });
 
-    const user = await createUser({ name, email, password_hash });
+    // If API client (Swagger/Postman)
+    if (req.headers.accept?.includes('application/json')) {
+      return res.status(201).json({
+        id: user.id,
+        name: user.name,
+        email: user.email
+      });
+    }
 
-    res.status(201).json({
-      id: user.id,
-      name: user.name,
-      email: user.email
-    });
+    // If EJS form submission
+    res.redirect('/api/auth/login');
   } catch (err) {
     console.error('Register error:', err);
     res.status(500).json({ error: 'Server error during registration' });
   }
 });
 
+// -------------------- LOGIN --------------------
 /**
  * @swagger
  * /api/auth/login:
@@ -111,13 +106,6 @@ router.post('/register', registerRules(), async (req, res) => {
  *     responses:
  *       200:
  *         description: Login successful, returns JWT token
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 token:
- *                   type: string
  *       401:
  *         description: Invalid credentials
  *       500:
@@ -128,14 +116,10 @@ router.post('/login', loginRules(), async (req, res) => {
 
   try {
     const user = await findByEmail(email);
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
+    if (!user) return res.status(401).json({ error: 'Invalid credentials' });
 
     const ok = await bcrypt.compare(password, user.password_hash);
-    if (!ok) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
+    if (!ok) return res.status(401).json({ error: 'Invalid credentials' });
 
     const token = jwt.sign(
       { sub: user.id, email: user.email, role: user.role },
@@ -143,7 +127,14 @@ router.post('/login', loginRules(), async (req, res) => {
       { expiresIn: '12h' }
     );
 
-    res.json({ token });
+    // If API client (Swagger/Postman)
+    if (req.headers.accept?.includes('application/json')) {
+      return res.json({ token });
+    }
+
+    // If EJS form submission → set cookie and redirect
+    res.cookie('token', token, { httpOnly: true });
+    res.redirect('/');
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ error: 'Server error during login' });
