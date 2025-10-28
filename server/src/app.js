@@ -15,20 +15,26 @@ const authRoutes = require('./routes/auth.routes');
 const devicesRoutes = require('./routes/devices.routes');
 const readingsRoutes = require('./routes/readings.routes');
 const swaggerSetup = require('./config/swagger');
-const requireAuth = require('./middleware/auth'); // ✅ JWT middleware
-
-// Import Device model directly
+const requireAuth = require('./middleware/auth');
 const Device = require('./models/devices');
 
 const app = express();
 
 // -------------------- Security, parsing, logging --------------------
 app.use(helmet());
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key']
+  origin: process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',')
+    : ['http://localhost:3000', 'http://localhost:3001'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key'],
+  credentials: true
 }));
+
+// ❌ REMOVE this line (Express 5 no longer accepts '*' or '/*')
+// app.options('/*', cors());
+
 app.use(express.json({ limit: '200kb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
@@ -56,7 +62,6 @@ app.use('/api/readings', readingsRoutes);
 swaggerSetup(app);
 
 // -------------------- Page routes --------------------
-// Public pages
 app.get('/login', (req, res) =>
   res.render('login', { title: 'Login', page: 'login', error: null })
 );
@@ -65,15 +70,13 @@ app.get('/signup', (req, res) =>
   res.render('signup', { title: 'Sign Up', page: 'signup', error: null })
 );
 
-// Protected pages (require JWT in cookie or header)
 app.get('/', requireAuth, (req, res) =>
   res.render('index', { title: 'Smart Greenhouse', page: 'dashboard', user: req.user })
 );
 
-// Devices page now queries DB
 app.get('/devices', requireAuth, async (req, res) => {
   try {
-    const devices = await Device.findAll(); // Sequelize query
+    const devices = await Device.findAll();
     res.render('devices', {
       title: 'Devices',
       page: 'devices',
@@ -98,8 +101,8 @@ app.get('/charts', requireAuth, (req, res) =>
 
 module.exports = app;
 
+// -------------------- Start server --------------------
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
-
