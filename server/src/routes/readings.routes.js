@@ -16,6 +16,31 @@ const { Reading } = require('../models/readings');
  *   get:
  *     summary: Get the latest reading for a device
  *     tags: [Readings]
+ *     parameters:
+ *       - in: path
+ *         name: device_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The unique device_id of the device
+ *     responses:
+ *       200:
+ *         description: Latest reading
+ *         content:
+ *           application/json:
+ *             example:
+ *               device_id: dev_001
+ *               temperature: 24.5
+ *               humidity: 60
+ *               soil_moisture: 45
+ *               light_level: 300
+ *               created_at: 2025-10-28T12:00:00Z
+ *       404:
+ *         description: No readings found
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: No readings found
  */
 router.get('/:device_id', async (req, res) => {
   try {
@@ -40,6 +65,38 @@ router.get('/:device_id', async (req, res) => {
  *   get:
  *     summary: Get recent readings for a device (for charts)
  *     tags: [Readings]
+ *     parameters:
+ *       - in: path
+ *         name: device_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *         description: Number of recent readings to return
+ *     responses:
+ *       200:
+ *         description: Recent readings
+ *         content:
+ *           application/json:
+ *             example:
+ *               - device_id: dev_001
+ *                 temperature: 25.1
+ *                 humidity: 58
+ *                 soil_moisture: 47
+ *                 light_level: 310
+ *                 created_at: 2025-10-28T12:10:00Z
+ *               - device_id: dev_001
+ *                 temperature: 24.8
+ *                 humidity: 59
+ *                 soil_moisture: 46
+ *                 light_level: 305
+ *                 created_at: 2025-10-28T12:05:00Z
+ *       404:
+ *         description: No readings found
  */
 router.get('/:device_id/recent', async (req, res) => {
   try {
@@ -67,6 +124,46 @@ router.get('/:device_id/recent', async (req, res) => {
  *   get:
  *     summary: Get readings for a device within a date range
  *     tags: [Readings]
+ *     parameters:
+ *       - in: path
+ *         name: device_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: start
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         description: Start date (ISO format)
+ *       - in: query
+ *         name: end
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         description: End date (ISO format)
+ *     responses:
+ *       200:
+ *         description: Readings in the given range
+ *         content:
+ *           application/json:
+ *             example:
+ *               - device_id: dev_001
+ *                 temperature: 24.2
+ *                 humidity: 61
+ *                 soil_moisture: 44
+ *                 light_level: 290
+ *                 created_at: 2025-10-28T11:00:00Z
+ *       400:
+ *         description: Missing start or end date
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Start and end dates are required
+ *       404:
+ *         description: No readings found in this range
  */
 router.get('/:device_id/range', async (req, res) => {
   try {
@@ -100,6 +197,28 @@ router.get('/:device_id/range', async (req, res) => {
  *   get:
  *     summary: Get average readings for a device
  *     tags: [Readings]
+ *     parameters:
+ *       - in: path
+ *         name: device_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Average readings
+ *         content:
+ *           application/json:
+ *             example:
+ *               avg_temperature: 24.7
+ *               avg_humidity: 59.3
+ *               avg_soil_moisture: 45.2
+ *               avg_light_level: 302.5
+ *       404:
+ *         description: No readings found
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: No readings found
  */
 router.get('/:device_id/average', async (req, res) => {
   try {

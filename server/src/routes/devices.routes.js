@@ -21,6 +21,16 @@ const Device = require('../models/devices');   // ✅ Sequelize model
  *     responses:
  *       200:
  *         description: A list of devices
+ *         content:
+ *           application/json:
+ *             example:
+ *               - device_id: dev_001
+ *                 device_name: Greenhouse Sensor
+ *                 project_tag: greenhouse
+ *                 location: Blantyre
+ *                 status: active
+ *                 user_id: 1
+ *                 created_at: 2025-10-28T12:00:00Z
  */
 router.get('/', auth, async (_req, res) => {
   try {
@@ -51,6 +61,55 @@ router.get('/', auth, async (_req, res) => {
  *     tags: [Devices]
  *     security:
  *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - device_id
+ *               - device_name
+ *             properties:
+ *               device_id:
+ *                 type: string
+ *                 example: dev_003
+ *               device_name:
+ *                 type: string
+ *                 example: Soil Moisture Sensor
+ *               project_tag:
+ *                 type: string
+ *                 example: greenhouse
+ *               location:
+ *                 type: string
+ *                 example: Lilongwe
+ *               status:
+ *                 type: string
+ *                 enum: [active, inactive]
+ *                 example: active
+ *     responses:
+ *       201:
+ *         description: Device registered successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               device:
+ *                 device_id: dev_003
+ *                 device_name: Soil Moisture Sensor
+ *                 project_tag: greenhouse
+ *                 location: Lilongwe
+ *                 status: active
+ *                 user_id: 1
+ *                 created_at: 2025-10-28T12:30:00Z
+ *               apiKey: "a1b2c3d4e5f6..."
+ *       409:
+ *         description: Device already exists
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: device_id exists
+ *       500:
+ *         description: Server error during registration
  */
 router.post('/', auth, deviceCreateRules(), async (req, res) => {
   try {
@@ -110,8 +169,17 @@ router.post('/', auth, deviceCreateRules(), async (req, res) => {
  *     responses:
  *       200:
  *         description: Device deleted successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Device deleted successfully
+ *               device_id: dev_003
  *       404:
  *         description: Device not found
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Device not found
  */
 router.delete('/:device_id', auth, async (req, res) => {
   try {

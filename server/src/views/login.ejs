@@ -2,12 +2,35 @@
   <h2 class="auth-title">Login</h2>
 
   <% if (error) { %>
-    <p class="auth-error"><%= error %></p>
+    <div class="auth-error-box">
+      <% if (Array.isArray(error)) { %>
+        <ul>
+          <% error.forEach(function(msg) { %>
+            <li><%= msg %></li>
+          <% }) %>
+        </ul>
+      <% } else { %>
+        <p><%= error %></p>
+      <% } %>
+    </div>
   <% } %>
 
   <form action="/api/auth/login" method="POST" class="auth-form">
-    <input type="email" name="email" placeholder="Email" required class="auth-input" />
-    <input type="password" name="password" placeholder="Password" required class="auth-input" />
+    <input 
+      type="email" 
+      name="email" 
+      placeholder="Email" 
+      required 
+      class="auth-input" 
+      value="<%= typeof formData !== 'undefined' ? formData.email : '' %>" 
+    />
+    <input 
+      type="password" 
+      name="password" 
+      placeholder="Password" 
+      required 
+      class="auth-input" 
+    />
     <button type="submit" class="auth-button">Login</button>
   </form>
 

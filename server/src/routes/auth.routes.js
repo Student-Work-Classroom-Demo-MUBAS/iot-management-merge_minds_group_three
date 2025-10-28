@@ -2,7 +2,7 @@
  * @swagger
  * tags:
  *   name: Auth
- *   description: Endpoints for user authentication
+ *   description: Endpoints for user authentication (API clients use JSON; web forms use EJS)
  */
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
@@ -16,7 +16,7 @@ const { createUser, findByEmail } = require('../models/users');
  * @swagger
  * /api/auth/register:
  *   post:
- *     summary: Register a new user
+ *     summary: Register a new user (API JSON)
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -64,14 +64,20 @@ router.post('/register', registerRules(), async (req, res) => {
   try {
     const existing = await findByEmail(email);
     if (existing) {
-      return res.status(409).json({ error: 'Email already registered' });
+      if (req.is('application/json')) {
+        return res.status(409).json({ error: 'Email already registered' });
+      }
+      return res.status(409).render('signup', {
+        title: 'Sign Up',
+        page: 'signup',
+        error: 'Email already registered',
+        formData: { name, email }
+      });
     }
 
-    // ✅ Hash password before saving (if model doesn’t already do it)
     const password_hash = await bcrypt.hash(password, 10);
     const user = await createUser({ name, email, password: password_hash });
 
-    // API client (Swagger/Postman)
     if (req.is('application/json')) {
       return res.status(201).json({
         id: user.id,
@@ -80,11 +86,18 @@ router.post('/register', registerRules(), async (req, res) => {
       });
     }
 
-    // EJS form submission
     res.redirect('/login');
   } catch (err) {
     console.error('Register error:', err);
-    res.status(500).json({ error: 'Server error during registration' });
+    if (req.is('application/json')) {
+      return res.status(500).json({ error: 'Server error during registration' });
+    }
+    res.status(500).render('signup', {
+      title: 'Sign Up',
+      page: 'signup',
+      error: 'Server error during registration',
+      formData: { name, email }
+    });
   }
 });
 
@@ -93,7 +106,7 @@ router.post('/register', registerRules(), async (req, res) => {
  * @swagger
  * /api/auth/login:
  *   post:
- *     summary: Login and receive a JWT
+ *     summary: Login and receive a JWT (API JSON)
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -134,10 +147,30 @@ router.post('/login', loginRules(), async (req, res) => {
 
   try {
     const user = await findByEmail(email);
-    if (!user) return res.status(401).json({ error: 'Invalid credentials' });
+    if (!user) {
+      if (req.is('application/json')) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+      return res.status(401).render('login', {
+        title: 'Login',
+        page: 'login',
+        error: 'Invalid credentials',
+        formData: { email }
+      });
+    }
 
     const ok = await bcrypt.compare(password, user.password_hash);
-    if (!ok) return res.status(401).json({ error: 'Invalid credentials' });
+    if (!ok) {
+      if (req.is('application/json')) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+      return res.status(401).render('login', {
+        title: 'Login',
+        page: 'login',
+        error: 'Invalid credentials',
+        formData: { email }
+      });
+    }
 
     const token = jwt.sign(
       { sub: user.id, email: user.email, role: user.role },
@@ -145,12 +178,10 @@ router.post('/login', loginRules(), async (req, res) => {
       { expiresIn: '12h' }
     );
 
-    // API client (Swagger/Postman)
     if (req.is('application/json')) {
       return res.json({ token });
     }
 
-    // EJS form submission → set cookie and redirect
     res.cookie('token', token, {
       httpOnly: true,
       sameSite: 'lax',
@@ -159,7 +190,15 @@ router.post('/login', loginRules(), async (req, res) => {
     res.redirect('/');
   } catch (err) {
     console.error('Login error:', err);
-    res.status(500).json({ error: 'Server error during login' });
+    if (req.is('application/json')) {
+      return res.status(500).json({ error: 'Server error during login' });
+    }
+    res.status(500).render('login', {
+      title: 'Login',
+      page: 'login',
+      error: 'Server error during login',
+      formData: { email }
+    });
   }
 });
 
