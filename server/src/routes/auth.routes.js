@@ -4,7 +4,6 @@
  *   name: Auth
  *   description: Endpoints for user authentication
  */
-
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -44,8 +43,18 @@ const { createUser, findByEmail } = require('../models/users');
  *     responses:
  *       201:
  *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               id: 1
+ *               name: John Doe
+ *               email: john@example.com
  *       409:
  *         description: Email already registered
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Email already registered
  *       500:
  *         description: Server error during registration
  */
@@ -58,11 +67,12 @@ router.post('/register', registerRules(), async (req, res) => {
       return res.status(409).json({ error: 'Email already registered' });
     }
 
-    // ✅ Let model handle hashing
-    const user = await createUser({ name, email, password });
+    // ✅ Hash password before saving (if model doesn’t already do it)
+    const password_hash = await bcrypt.hash(password, 10);
+    const user = await createUser({ name, email, password: password_hash });
 
-    // If API client (Swagger/Postman)
-    if (req.headers.accept?.includes('application/json')) {
+    // API client (Swagger/Postman)
+    if (req.is('application/json')) {
       return res.status(201).json({
         id: user.id,
         name: user.name,
@@ -70,8 +80,8 @@ router.post('/register', registerRules(), async (req, res) => {
       });
     }
 
-    // If EJS form submission
-    res.redirect('/api/auth/login');
+    // EJS form submission
+    res.redirect('/login');
   } catch (err) {
     console.error('Register error:', err);
     res.status(500).json({ error: 'Server error during registration' });
@@ -106,8 +116,16 @@ router.post('/register', registerRules(), async (req, res) => {
  *     responses:
  *       200:
  *         description: Login successful, returns JWT token
+ *         content:
+ *           application/json:
+ *             example:
+ *               token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
  *       401:
  *         description: Invalid credentials
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Invalid credentials
  *       500:
  *         description: Server error during login
  */
@@ -127,13 +145,17 @@ router.post('/login', loginRules(), async (req, res) => {
       { expiresIn: '12h' }
     );
 
-    // If API client (Swagger/Postman)
-    if (req.headers.accept?.includes('application/json')) {
+    // API client (Swagger/Postman)
+    if (req.is('application/json')) {
       return res.json({ token });
     }
 
-    // If EJS form submission → set cookie and redirect
-    res.cookie('token', token, { httpOnly: true });
+    // EJS form submission → set cookie and redirect
+    res.cookie('token', token, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production'
+    });
     res.redirect('/');
   } catch (err) {
     console.error('Login error:', err);
