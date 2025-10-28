@@ -32,9 +32,6 @@ app.use(cors({
   credentials: true
 }));
 
-// ❌ REMOVE this line (Express 5 no longer accepts '*' or '/*')
-// app.options('/*', cors());
-
 app.use(express.json({ limit: '200kb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
@@ -99,10 +96,4 @@ app.get('/charts', requireAuth, (req, res) =>
   res.render('charts', { title: 'Charts', page: 'charts', user: req.user })
 );
 
-module.exports = app;
-
-// -------------------- Start server --------------------
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
-});
+module.exports = app;   // ✅ only export app, no listen here
