@@ -1,17 +1,7 @@
-// require('dotenv').config(); // ✅ Load environment variables
-// require('dotenv').config({ path: '../.env' });
+// Load environment variables early
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
+
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
-
-
-console.log('DB config:', {
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT
-});
-
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -29,10 +19,8 @@ const requireAuth = require('./middleware/auth'); // ✅ JWT middleware
 
 // Import Device model directly
 const Device = require('./models/devices');
-const app = express();
 
-app.use(express.json());
-app.use('/readings', readingsRoutes);
+const app = express();
 
 // -------------------- Security, parsing, logging --------------------
 app.use(helmet());

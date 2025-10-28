@@ -8,7 +8,7 @@ const router = require('express').Router();
 const crypto = require('crypto');
 const auth = require('../middleware/auth');
 const { deviceCreateRules } = require('../middleware/validators');
-const Device = require('../models/devices');   // ✅ use Sequelize model
+const Device = require('../models/devices');   // ✅ Sequelize model
 
 /**
  * @swagger
@@ -100,12 +100,37 @@ router.post('/', auth, deviceCreateRules(), async (req, res) => {
  *     tags: [Devices]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: device_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The unique device_id of the device to delete
+ *     responses:
+ *       200:
+ *         description: Device deleted successfully
+ *       404:
+ *         description: Device not found
  */
 router.delete('/:device_id', auth, async (req, res) => {
   try {
-    const deleted = await Device.destroy({ where: { device_id: req.params.device_id } });
-    if (!deleted) return res.status(404).json({ error: 'Device not found' });
-    res.status(204).end();
+    const { device_id } = req.params;
+
+    // Find the device first
+    const device = await Device.findOne({ where: { device_id } });
+    if (!device) {
+      return res.status(404).json({ error: 'Device not found' });
+    }
+
+    // Delete the device
+    await device.destroy();
+
+    // Respond with confirmation
+    res.status(200).json({
+      message: 'Device deleted successfully',
+      device_id: device_id
+    });
   } catch (err) {
     console.error('Remove device error:', err);
     res.status(500).json({ error: 'Failed to remove device' });
