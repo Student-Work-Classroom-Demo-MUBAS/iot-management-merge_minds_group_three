@@ -1,92 +1,80 @@
-const db = require('../config/db');
-const Sequelize = require('sequelize');
-const QueryTypes = Sequelize.QueryTypes;
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/db');
+const Device = require('./devices'); 
 
-/**
- * Insert a new reading into the database
- */
-async function insertReading(data) {
-  const { device_id, temperature, humidity, soil_moisture, light_level } = data;
+const Reading = sequelize.define('Reading', {
+  id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
 
-  await db.query(
-    `INSERT INTO readings (device_id, temperature, humidity, soil_moisture, light_level)
-     VALUES (:device_id, :temperature, :humidity, :soil_moisture, :light_level)`,
-    {
-      replacements: { device_id, temperature, humidity, soil_moisture, light_level },
-      type: QueryTypes.INSERT
-    }
-  );
+  temperature: { type: DataTypes.FLOAT },
+
+  humidity: { type: DataTypes.FLOAT },
+
+  soil_moisture: { type: DataTypes.FLOAT },
+
+  light_level: { type: DataTypes.FLOAT }
+}, {
+  tableName: 'readings',
+  timestamps: true,
+  createdAt: 'created_at',
+  updatedAt: false
+});
+
+// -------------------- Associations --------------------
+if (Device && Device.hasMany) {
+  Device.hasMany(Reading, { foreignKey: 'device_id', sourceKey: 'device_id' });
+  Reading.belongsTo(Device, { foreignKey: 'device_id', targetKey: 'device_id' });
 }
 
-/**
- * Get the latest reading for a specific device
- */
-async function getLatestByDevice(deviceId) {
-  const [result] = await db.query(
-    `SELECT * FROM readings 
-     WHERE device_id = :device_id 
-     ORDER BY created_at DESC 
-     LIMIT 1`,
-    {
-      replacements: { device_id: deviceId },
-      type: QueryTypes.SELECT
-    }
-  );
-  return result;
+// -------------------- Helper functions --------------------
+
+// Insert a new reading
+async function insertReading({ device_id, temperature, humidity, soil_moisture, light_level }) {
+  return await Reading.create({ device_id, temperature, humidity, soil_moisture, light_level });
 }
 
-/**
- * Get recent readings (limit configurable)
- */
+// Get the latest reading for a device
+async function getLatestByDevice(device_id) {
+  return await Reading.findOne({
+    where: { device_id },
+    order: [['created_at', 'DESC']]
+  });
+}
+
+// Get recent readings (limit configurable)
 async function getRecentReadings(limit = 10) {
-  return await db.query(
-    `SELECT * FROM readings 
-     ORDER BY created_at DESC 
-     LIMIT :limit`,
-    {
-      replacements: { limit },
-      type: QueryTypes.SELECT
-    }
-  );
+  return await Reading.findAll({
+    order: [['created_at', 'DESC']],
+    limit
+  });
 }
 
-/**
- * Get readings within a date range
- */
-async function getReadingsInRange(deviceId, startDate, endDate) {
-  return await db.query(
-    `SELECT * FROM readings 
-     WHERE device_id = :device_id 
-       AND created_at BETWEEN :start_date AND :end_date
-     ORDER BY created_at ASC`,
-    {
-      replacements: { device_id: deviceId, start_date: startDate, end_date: endDate },
-      type: QueryTypes.SELECT
-    }
-  );
+// Get readings within a date range
+async function getReadingsInRange(device_id, startDate, endDate) {
+  return await Reading.findAll({
+    where: {
+      device_id,
+      created_at: { [sequelize.Op.between]: [startDate, endDate] }
+    },
+    order: [['created_at', 'ASC']]
+  });
 }
 
-/**
- * Get average readings for a device
- */
-async function getAverageReadings(deviceId) {
-  const [result] = await db.query(
-    `SELECT 
-       AVG(temperature) AS avg_temperature,
-       AVG(humidity) AS avg_humidity,
-       AVG(soil_moisture) AS avg_soil_moisture,
-       AVG(light_level) AS avg_light_level
-     FROM readings
-     WHERE device_id = :device_id`,
-    {
-      replacements: { device_id: deviceId },
-      type: QueryTypes.SELECT
-    }
-  );
-  return result;
+// Get average readings for a device
+async function getAverageReadings(device_id) {
+  return await Reading.findOne({
+    where: { device_id },
+    attributes: [
+      [sequelize.fn('AVG', sequelize.col('temperature')), 'avg_temperature'],
+      [sequelize.fn('AVG', sequelize.col('humidity')), 'avg_humidity'],
+      [sequelize.fn('AVG', sequelize.col('soil_moisture')), 'avg_soil_moisture'],
+      [sequelize.fn('AVG', sequelize.col('light_level')), 'avg_light_level']
+    ],
+    raw: true
+  });
 }
 
 module.exports = {
+  Reading,             // export the Sequelize model
   insertReading,
   getLatestByDevice,
   getRecentReadings,

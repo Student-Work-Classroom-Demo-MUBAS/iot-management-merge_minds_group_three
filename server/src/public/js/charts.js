@@ -1,9 +1,14 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  const deviceId = 'DEVICE123'; // TODO: Replace dynamically
+  // TODO: Replace dynamically (e.g. from query string or localStorage)
+  const deviceId = 'DEVICE123';
   const limit = 20; // last 20 readings
 
   try {
-    const res = await fetch(`/readings/${deviceId}/recent?limit=${limit}`);
+    // ✅ Use correct API path and include cookies
+    const res = await fetch(`/api/readings/${deviceId}/recent?limit=${limit}`, {
+      credentials: 'include'
+    });
+
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const readings = await res.json();
 
@@ -83,7 +88,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       data: {
         labels,
         datasets: [{
-          label: 'Light Level',
+          label: 'Light Level (%)',
           data: lightData,
           borderColor: 'goldenrod',
           backgroundColor: 'rgba(255,215,0,0.1)',

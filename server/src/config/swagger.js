@@ -12,7 +12,7 @@ const options = {
       description: 'API documentation for the Smart Greenhouse project'
     },
     servers: [
-      { url: 'http://localhost:4000' } // Update if running on a different host/port
+      { url: 'http://localhost:3000' } 
     ],
     components: {
       securitySchemes: {
