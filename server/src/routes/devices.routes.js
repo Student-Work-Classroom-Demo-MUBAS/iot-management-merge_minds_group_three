@@ -129,8 +129,8 @@ router.post('/', auth, deviceCreateRules(), async (req, res) => {
       project_tag,
       location,
       status,
-      api_key: apiKeyPlain,   // ✅ store plaintext
-      user_id: req.user.sub   // ✅ from JWT
+      apiKey: apiKeyPlain,   // ✅ correct field name
+      user_id: req.user.sub  // ✅ from JWT
     });
 
     res.status(201).json({

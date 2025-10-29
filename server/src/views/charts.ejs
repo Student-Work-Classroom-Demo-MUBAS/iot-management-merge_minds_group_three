@@ -1,51 +1,15 @@
 <section class="charts-section">
-  <!-- Title with icon -->
   <h2 class="charts-title">
     <img src="/images/charts-icon.png" alt="Charts Icon" class="section-icon">
     Sensor Data Charts
   </h2>
   <p class="charts-subtitle">
-    Live visualisation of temperature, humidity, soil moisture, and light levels.
+    Live visualisation of temperature, humidity, soil moisture, and light levels per device.
   </p>
 
   <div class="charts-grid">
-    <div class="chart-card">
-      <div class="chart-header">
-        <img src="/images/temp-icon.png" alt="Temperature Icon" class="chart-icon">
-        <h3>Temperature</h3>
-      </div>
-      <canvas id="tempChart"></canvas>
-    </div>
-
-    <div class="chart-card">
-      <div class="chart-header">
-        <img src="/images/humidity-icon.png" alt="Humidity Icon" class="chart-icon">
-        <h3>Humidity</h3>
-      </div>
-      <canvas id="humidityChart"></canvas>
-    </div>
-
-    <div class="chart-card">
-      <div class="chart-header">
-        <img src="/images/soil-icon.png" alt="Soil Moisture Icon" class="chart-icon">
-        <h3>Soil Moisture</h3>
-      </div>
-      <canvas id="soilChart"></canvas>
-    </div>
-
-    <div class="chart-card">
-      <div class="chart-header">
-        <img src="/images/light-icon.png" alt="Light Level Icon" class="chart-icon">
-        <h3>Light Level</h3>
-      </div>
-      <canvas id="lightChart"></canvas>
-    </div>
+    <!-- JS will inject latest readings per device -->
   </div>
 </section>
 
-<!-- Chart.js Libraries -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-
-<!-- Page-specific script -->
 <script src="/js/charts.js"></script>

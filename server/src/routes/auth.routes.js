@@ -202,4 +202,68 @@ router.post('/login', loginRules(), async (req, res) => {
   }
 });
 
+
+// -------------------- DEVICE AUTH --------------------
+/**
+ * @swagger
+ * /api/auth/device:
+ *   post:
+ *     summary: Authenticate a device using device_id and apiKey
+ *     tags: [Auth]
+ *     parameters:
+ *       - in: header
+ *         name: x-device-id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Device ID
+ *       - in: header
+ *         name: x-api-key
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: API key assigned to the device
+ *     responses:
+ *       200:
+ *         description: Device authenticated successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               device_id: dev-001
+ *               device_name: Greenhouse Temp Sensor
+ *               location: Section A
+ *       401:
+ *         description: Invalid device credentials
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Unauthorized
+ *       500:
+ *         description: Server error during device auth
+ */
+router.post('/device', async (req, res) => {
+  const deviceId = req.headers['x-device-id'];
+  const apiKey = req.headers['x-api-key'];
+
+  if (!deviceId || !apiKey) {
+    return res.status(400).json({ error: 'Missing x-device-id or x-api-key headers' });
+  }
+
+  try {
+    const device = await Device.findOne({ where: { device_id: deviceId, status: 'active' } });
+    if (!device || device.apiKey !== apiKey) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    return res.status(200).json({
+      device_id: device.device_id,
+      device_name: device.device_name,
+      location: device.location
+    });
+  } catch (err) {
+    console.error('Device auth error:', err);
+    res.status(500).json({ error: 'Server error during device authentication' });
+  }
+});
+
 module.exports = router;

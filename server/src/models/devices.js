@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
-const User = require('./users');   // import directly, not destructured
+const User = require('./users');
 
 const Device = sequelize.define('Device', {
   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
@@ -15,7 +15,7 @@ const Device = sequelize.define('Device', {
 
   status: { type: DataTypes.STRING(20), defaultValue: 'offline' },
 
-  api_key: { type: DataTypes.STRING, allowNull: false }
+  apiKey: { type: DataTypes.STRING, allowNull: false, field: 'api_key' }
 }, {
   tableName: 'devices',
   timestamps: true,

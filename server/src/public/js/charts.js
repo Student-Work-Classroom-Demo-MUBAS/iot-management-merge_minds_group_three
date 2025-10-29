@@ -1,104 +1,38 @@
-document.addEventListener('DOMContentLoaded', async () => {
-  // TODO: Replace dynamically (e.g. from query string or localStorage)
-  const deviceId = 'DEVICE123';
-  const limit = 20; // last 20 readings
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.querySelector('.charts-grid');
 
-  try {
-    // ✅ Use correct API path and include cookies
-    const res = await fetch(`/api/readings/${deviceId}/recent?limit=${limit}`, {
-      credentials: 'include'
-    });
+  async function loadLatestReadings() {
+    container.textContent = 'Loading...';
 
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const readings = await res.json();
+    try {
+      const res = await fetch('/api/readings/all-latest', {
+        credentials: 'include',
+        cache: 'no-store'
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
 
-    if (!readings.length) {
-      console.warn('No readings available for chart.');
-      return;
-    }
-
-    // Prepare chart data
-    const labels = readings.map(r => new Date(r.timestamp));
-    const tempData = readings.map(r => r.temperature);
-    const humidityData = readings.map(r => r.humidity);
-    const soilData = readings.map(r => r.soil_moisture);
-    const lightData = readings.map(r => r.light_level);
-
-    // Chart options
-    const commonOptions = {
-      responsive: true,
-      animation: { duration: 800 },
-      scales: {
-        x: { type: 'time', time: { unit: 'minute' } },
-        y: { beginAtZero: true }
+      if (!data.length) {
+        container.textContent = 'No readings available';
+        return;
       }
-    };
 
-    // Temperature chart
-    new Chart(document.getElementById('tempChart').getContext('2d'), {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Temperature (°C)',
-          data: tempData,
-          borderColor: 'red',
-          backgroundColor: 'rgba(255,0,0,0.1)',
-          fill: true
-        }]
-      },
-      options: commonOptions
-    });
-
-    // Humidity chart
-    new Chart(document.getElementById('humidityChart').getContext('2d'), {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Humidity (%)',
-          data: humidityData,
-          borderColor: 'blue',
-          backgroundColor: 'rgba(0,0,255,0.1)',
-          fill: true
-        }]
-      },
-      options: commonOptions
-    });
-
-    // Soil moisture chart
-    new Chart(document.getElementById('soilChart').getContext('2d'), {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Soil Moisture (%)',
-          data: soilData,
-          borderColor: 'green',
-          backgroundColor: 'rgba(0,255,0,0.1)',
-          fill: true
-        }]
-      },
-      options: commonOptions
-    });
-
-    // Light level chart
-    new Chart(document.getElementById('lightChart').getContext('2d'), {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Light Level (%)',
-          data: lightData,
-          borderColor: 'goldenrod',
-          backgroundColor: 'rgba(255,215,0,0.1)',
-          fill: true
-        }]
-      },
-      options: commonOptions
-    });
-
-  } catch (err) {
-    console.error('Error loading chart data:', err);
+      container.innerHTML = data.map(r => `
+        <div class="reading-card">
+          <h4>Device: ${r.device_id}</h4>
+          <p class="temp">🌡️ Temp: ${r.temperature ?? '--'} °C</p>
+          <p class="humidity">💧 Humidity: ${r.humidity ?? '--'} %</p>
+          <p class="soil">🌱 Soil: ${r.soil_moisture ?? '--'} %</p>
+          <p class="light">💡 Light: ${r.light_level ?? '--'} %</p>
+          <small>${new Date(r.created_at).toLocaleString()}</small>
+        </div>
+      `).join('');
+    } catch (err) {
+      console.error('Error loading latest readings:', err);
+      container.textContent = 'Failed to load readings';
+    }
   }
+
+  loadLatestReadings();
+  setInterval(loadLatestReadings, 60000); // refresh every minute
 });

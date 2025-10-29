@@ -434,7 +434,9 @@ h1, h2, h3, h4 {
    CHARTS SECTION CONTAINER
    ========================= */
 
-/* Title with icon */
+/* =========================
+   CHARTS SECTION HEADER
+   ========================= */
 .charts-title {
   font-size: 2.2rem;
   font-weight: 800;
@@ -445,7 +447,6 @@ h1, h2, h3, h4 {
   gap: 15px;
 }
 
-/* Subtitle */
 .charts-subtitle {
   font-size: 1.3rem;
   color: var(--text-light);
@@ -453,50 +454,71 @@ h1, h2, h3, h4 {
 }
 
 /* =========================
-   CHART GRID
+   CHARTS GRID
    ========================= */
 .charts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   gap: 30px;
+  align-items: stretch;
 }
 
-/* Chart card styling */
-.chart-card {
+/* =========================
+   READING CARD STYLING
+   ========================= */
+.reading-card {
   background: var(--bg-surface);
   border-radius: var(--border-radius-lg);
-  padding: 30px;
+  padding: 25px;
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.chart-card:hover {
+.reading-card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-md);
 }
 
-/* Chart header with icon */
-.chart-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.chart-icon {
-  width: 70px;
-  height: 70px;
-  object-fit: contain;
-}
-
-.chart-card h3 {
-  font-size: 1.4rem;
+.reading-card h4 {
+  font-size: 1.7rem;
   font-weight: 700;
   color: var(--brand-primary);
+  margin: 0 0 5px;
 }
+
+.reading-card p {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0.2rem 0;
+}
+
+/* Sensor-specific colors */
+.reading-card p.temp {
+  color: #0d5a08; /* red */
+}
+
+.reading-card p.humidity {
+  color: #0d5a08; /* blue */
+}
+
+.reading-card p.soil {
+  color: #0d5a08; 
+}
+
+.reading-card p.light {
+  color: #0d5a08; 
+}
+
+.reading-card small {
+  font-size: 0.85rem;
+  color: #777;
+  margin-top: 8px;
+}
+
 
 /* =========================
    RESPONSIVE TWEAKS (Improved Mobile optimization)
@@ -651,4 +673,73 @@ h1, h2, h3, h4 {
 
 .auth-link a:hover {
   text-decoration: underline;
+}
+
+/*Recent Devices Section*/
+.recent-section {
+  padding: 2rem;
+  background-color: #f9fdf9;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 128, 0, 0.1);
+  margin: 2rem 0;
+}
+
+.recent-section h2 {
+  color: #0d310f; /* dark green */
+  font-size: 2.5rem; /* roughly 2x default */
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.recent-section .section-subtitle {
+  color: #113312; /* medium green */
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.recent-readings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.reading-card {
+  background-color: #ffffff;
+  border: 1px solid #c8e6c9;
+  border-left: 6px solid #66bb6a;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 128, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.reading-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 128, 0, 0.15);
+}
+
+.reading-card h4 {
+  margin: 0 0 0.5rem;
+  color: #2e7d32;
+  font-size: 1.7rem;
+}
+
+.reading-card p {
+  margin: 0.25rem 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.reading-card small {
+  display: block;
+  margin-top: 0.5rem;
+  color: #777;
+  font-size: 0.85rem;
+}
+
+.reading-card p {
+  font-size: 1.5rem;
+  color: #08360a; /* dark green */
+  font-weight: 300;
+  margin: 0.3rem 0;
 }
