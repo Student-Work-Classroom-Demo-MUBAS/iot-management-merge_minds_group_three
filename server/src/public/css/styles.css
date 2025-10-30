@@ -521,6 +521,43 @@ h1, h2, h3, h4 {
 
 
 /* =========================
+   READINGS LIST
+   ========================= */
+.readings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reading-row {
+  background: var(--bg-light, #f9fafb);
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-left: 4px solid var(--brand-primary);
+}
+
+.reading-row p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.reading-row span {
+  font-weight: 600;
+  color: var(--brand-primary);
+}
+.timestamp {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  margin-top: 4px;
+}
+/* =========================
    RESPONSIVE TWEAKS (Improved Mobile optimization)
    ========================= */
 @media (max-width: 900px) {
