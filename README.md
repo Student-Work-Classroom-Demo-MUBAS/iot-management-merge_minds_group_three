@@ -1,4 +1,4 @@
-# IoT Management System
+# IoT Management System, GROUP THREE
 
 ## Overview
 This project is a full‑stack IoT Data Management System. It collects sensor readings from ESP32‑C3 devices, transmits them securely to a backend API, stores them in a relational database, and visualizes them on a responsive web dashboard.
@@ -6,6 +6,7 @@ This project is a full‑stack IoT Data Management System. It collects sensor re
 The system demonstrates end‑to‑end IoT integration:  
 **Device → API → Database → Dashboard**
 
+---
 
 ## Features
 - Real‑time monitoring of temperature, humidity, soil moisture, and light levels  
@@ -22,6 +23,7 @@ The system demonstrates end‑to‑end IoT integration:
 ```
 IOT-MANAGEMENT-MER/
  ├── config/              # Configuration files
+ ├── docs/                # Project screenshots and documentation
  ├── firmware/            # ESP32-C3 device code
  ├── migrations/          # Database migrations
  ├── models/              # Sequelize models
@@ -41,6 +43,8 @@ IOT-MANAGEMENT-MER/
  ├── package-lock.json
  └── README.md
 ```
+
+The `docs/` folder contains screenshots and a simple project overview.
 
 ---
 
@@ -98,7 +102,7 @@ http://localhost:3000
 - `GET /api/devices` → List all devices  
 - `POST /api/auth/login` → User login (JWT)  
 
-Swagger docs available at:  
+Swagger documentation is available at:  
 ```
 http://localhost:3000/api-docs
 ```
@@ -129,9 +133,49 @@ http://localhost:3000/api-docs
 - Documentation (3)  
 - Collaboration & Git Usage (2)  
 
+---
 
 ## Notes
 - All sensor readings are timestamped (`created_at`) at the backend.  
 - Dashboard auto‑refreshes every 60 seconds.  
 - Devices and users are validated before data is accepted.  
+
+---
+
+## Team Distribution & Folder Ownership
+
+### Louiser — Backend Core & Device Ingestion
+- **Database & Models**
+  - `server/sql/schema.sql`
+  - `server/src/models/devices.js`
+  - `server/src/models/readings.js`
+- **Routes**
+  - `server/src/routes/devices.routes.js`
+  - `server/src/routes/readings.routes.js` *(POST /ingest)*
+- **Middleware**
+  - `server/src/middleware/apiKey.js`
+
+### Victoria — Frontend, Readings Query API & Firmware Sensors
+- **Frontend Views**
+  - `server/src/views/*.ejs`
+  - `server/src/views/layouts/main.ejs`
+  - `server/src/views/partials/*.ejs`
+- **Frontend Logic**
+  - `server/src/public/js/dashboard.js`
+  - `server/src/public/css/styles.css`
+- **Routes**
+  - `server/src/routes/readings.routes.js` *(GET /:device_id)*
+- **Firmware**
+  - `firmware/greenhouse_esp32.ino` *(sensor read + payload fields)*
+
+### Debra — Authentication, Security, Swagger & Firmware Networking
+- **Auth & Security**
+  - `server/src/routes/auth.routes.js`
+  - `server/src/middleware/auth.js`
+  - `server/src/middleware/validators.js`
+- **Configuration**
+  - `server/src/config/swagger.js`
+  - `server/src/app.js` *(helmet, CORS, rate limiting integration)*
+- **Firmware**
+  - `firmware/greenhouse_esp32.ino` *(Wi‑Fi connect + HTTP POST structure)*
 
